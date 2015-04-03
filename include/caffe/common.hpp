@@ -188,6 +188,16 @@ class Caffe {
   DISABLE_COPY_AND_ASSIGN(Caffe);
 };
 
+  template< typename T >
+  inline std::string str(T const & i)	// convert T i to string
+  {
+    std::stringstream s;
+    s << i;
+    return s.str();
+  }
+  
+  
+
 }  // namespace caffe
 
 #endif  // CAFFE_COMMON_HPP_
