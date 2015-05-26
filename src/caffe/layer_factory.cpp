@@ -11,6 +11,18 @@
 
 namespace caffe {
 
+  template< typename E, typename V >
+  void maybe_use_cudnn( E & e, V const & v ) { 
+    static bool disable_cudnn = 0;
+    static bool disable_cudnn_set = 0;
+    if( !disable_cudnn_set ) { 
+      char const * const eve = getenv( "DISABLE_CUDNN" );
+      if( eve && (string(eve) == "1") ) { disable_cudnn = 1; } 
+      disable_cudnn_set = 1; 
+    }
+    if( !disable_cudnn ) { e = v; }
+  }
+
 // Get convolution layer according to engine.
 template <typename Dtype>
 shared_ptr<Layer<Dtype> > GetConvolutionLayer(
@@ -19,7 +31,7 @@ shared_ptr<Layer<Dtype> > GetConvolutionLayer(
   if (engine == ConvolutionParameter_Engine_DEFAULT) {
     engine = ConvolutionParameter_Engine_CAFFE;
 #ifdef USE_CUDNN
-    engine = ConvolutionParameter_Engine_CUDNN;
+    maybe_use_cudnn( engine, ConvolutionParameter_Engine_CUDNN );
 #endif
   }
   if (engine == ConvolutionParameter_Engine_CAFFE) {
@@ -42,7 +54,7 @@ shared_ptr<Layer<Dtype> > GetPoolingLayer(const LayerParameter& param) {
   if (engine == PoolingParameter_Engine_DEFAULT) {
     engine = PoolingParameter_Engine_CAFFE;
 #ifdef USE_CUDNN
-    engine = PoolingParameter_Engine_CUDNN;
+    maybe_use_cudnn( engine, PoolingParameter_Engine_CUDNN );
 #endif
   }
   if (engine == PoolingParameter_Engine_CAFFE) {
@@ -72,7 +84,7 @@ shared_ptr<Layer<Dtype> > GetReLULayer(const LayerParameter& param) {
   if (engine == ReLUParameter_Engine_DEFAULT) {
     engine = ReLUParameter_Engine_CAFFE;
 #ifdef USE_CUDNN
-    engine = ReLUParameter_Engine_CUDNN;
+    maybe_use_cudnn( engine, ReLUParameter_Engine_CUDNN );
 #endif
   }
   if (engine == ReLUParameter_Engine_CAFFE) {
@@ -95,7 +107,7 @@ shared_ptr<Layer<Dtype> > GetSigmoidLayer(const LayerParameter& param) {
   if (engine == SigmoidParameter_Engine_DEFAULT) {
     engine = SigmoidParameter_Engine_CAFFE;
 #ifdef USE_CUDNN
-    engine = SigmoidParameter_Engine_CUDNN;
+    maybe_use_cudnn( engine, SigmoidParameter_Engine_CUDNN );
 #endif
   }
   if (engine == SigmoidParameter_Engine_CAFFE) {
@@ -118,7 +130,7 @@ shared_ptr<Layer<Dtype> > GetSoftmaxLayer(const LayerParameter& param) {
   if (engine == SoftmaxParameter_Engine_DEFAULT) {
     engine = SoftmaxParameter_Engine_CAFFE;
 #ifdef USE_CUDNN
-    engine = SoftmaxParameter_Engine_CUDNN;
+    maybe_use_cudnn( engine, SoftmaxParameter_Engine_CUDNN );
 #endif
   }
   if (engine == SoftmaxParameter_Engine_CAFFE) {
@@ -141,7 +153,7 @@ shared_ptr<Layer<Dtype> > GetTanHLayer(const LayerParameter& param) {
   if (engine == TanHParameter_Engine_DEFAULT) {
     engine = TanHParameter_Engine_CAFFE;
 #ifdef USE_CUDNN
-    engine = TanHParameter_Engine_CUDNN;
+    maybe_use_cudnn( engine, TanHParameter_Engine_CUDNN );
 #endif
   }
   if (engine == TanHParameter_Engine_CAFFE) {
