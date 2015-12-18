@@ -129,10 +129,9 @@ shared_ptr<Layer<Dtype> > GetLRNLayer(const LayerParameter& param) {
   LRNParameter_Engine engine = param.lrn_param().engine();
 
   if (engine == LRNParameter_Engine_DEFAULT) {
-#ifdef USE_CUDNN
-    engine = LRNParameter_Engine_CUDNN;
-#else
     engine = LRNParameter_Engine_CAFFE;
+#ifdef USE_CUDNN
+    maybe_use_cudnn( engine, LRNParameter_Engine_CUDNN );
 #endif
   }
 
