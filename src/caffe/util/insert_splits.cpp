@@ -95,6 +95,7 @@ void ConfigureSplitLayer(const string& layer_name, const string& blob_name,
   split_layer_param->set_name(SplitLayerName(layer_name, blob_name, blob_idx));
   split_layer_param->set_type("Split");
   for (int k = 0; k < split_count; ++k) {
+    //printf( "  CSL:" );
     split_layer_param->add_top(
         SplitBlobName(layer_name, blob_name, blob_idx, k));
     if (loss_weight) {
@@ -112,6 +113,7 @@ string SplitLayerName(const string& layer_name, const string& blob_name,
   ostringstream split_layer_name;
   split_layer_name << blob_name << "_" << layer_name << "_" << blob_idx
       << "_split";
+  //printf( "split_layer_name=%s\n", str(split_layer_name.str()).c_str() );
   return split_layer_name.str();
 }
 
@@ -120,6 +122,7 @@ string SplitBlobName(const string& layer_name, const string& blob_name,
   ostringstream split_blob_name;
   split_blob_name << blob_name << "_" << layer_name << "_" << blob_idx
       << "_split_" << split_idx;
+  //printf( "  split_blob_name=%s\n", str(split_blob_name.str()).c_str() );
   return split_blob_name.str();
 }
 
